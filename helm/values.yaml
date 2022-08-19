@@ -1,0 +1,16 @@
+apiversion: apps/v1
+app_name: api
+labels:
+  type: api-backend
+image: sruthividya/node-task:1.1
+minReplicas: 1
+maxReplicas: 3
+port: 4000
+secret_file: doc-secret
+replicaCount: 1
+type_svc: LoadBalancer
+serverURL: 
+dbuser: c3J1dGhpCg==
+dbpass: c3J1dGhpMTQK
+dbname: dXNlckRCCg==
+dbport: NDAwMAo=
