@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: api-deploy
+ labels:
+  type: api-backend
+spec:
+ template:
+  metadata:
+   name: api-app
+   labels:
+    type: api-backend
+  spec:
+   containers:
+    - name: app-container
+      image: sruthividya/node-task:1.1
+      resources:
+        limits:
+          cpu: "1"
+          memory: "1Gi"
+        requests:
+          cpu: "1"
+          memory: "500Mi"
+      ports:
+        - containerPort: 4000
+      env:
+        - name: DB_HOST
+          valueFrom:
+           secretKeyRef:
+             name: doc-secret
+             key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+           secretKeyRef:
+             name: doc-secret
+             key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+           secretKeyRef:
+             name: doc-secret
+             key: DB_PASSWORD
+        - name: DB_DATABASE
+          valueFrom:
+           secretKeyRef:
+             name: doc-secret
+             key: DB_DATABASE
+        - name: DB_PORT
+          valueFrom:
+           secretKeyRef:
+             name: doc-secret
+             key: DB_PORT
+        - name: PORT
+          valueFrom:
+           secretKeyRef:
+             name: doc-secret
+             key: PORT
+ replicas: 1
+ selector:
+  matchLabels:
+   type: api-backend
