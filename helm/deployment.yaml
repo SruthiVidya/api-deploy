@@ -1,0 +1,70 @@
+apiVersion: {{ .Values.apiversion }}
+kind: Deployment
+metadata:
+ name: {{ .Values.app_name }}-deploy
+ labels: 
+  {{ toYaml .Values.labels | indent 2 }} 
+spec:
+ template:
+  metadata:
+   name: {{ .Values.app_name }}-app
+   labels:
+    {{ toYaml .Values.labels | indent 4 }}
+  spec:
+   containers:
+    - name: {{ .Values.app_name }}-container
+      image: {{ .Values.image }}
+      ports:
+        - containerPort: {{ .Values.port }}
+      env:
+        - name: DB_HOST
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Values.secret_file }}
+             key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Values.secret_file }}
+             key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Values.secret_file }}
+             key: DB_PASSWORD
+        - name: DB_DATABASE
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Values.secret_file }}
+             key: DB_DATABASE
+        - name: DB_PORT
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Values.secret_file }}
+             key: DB_PORT
+        - name: PORT
+          valueFrom:
+           secretKeyRef:
+             name: {{ .Values.secret_file }}
+             key: PORT
+ replicas: {{ .Values.replicaCount }}
+ selector:
+  matchLabels:
+   {{ toYaml .Values.labels | indent 3 }}
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app_name }}-service
+spec:
+  selector:
+    {{ toYaml .Values.labels | indent 4 }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.port }}
+    targetPort: {{ .Values.port }}
+  externalTrafficPolicy: local
+  type: {{ .Values.type_svc }}
