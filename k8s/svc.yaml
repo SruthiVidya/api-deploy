@@ -4,7 +4,7 @@ metadata:
   name: api-backend
 spec:
   selector:
-    app: api-backend
+    type: api-backend
   ports:
   - protocol: TCP
     port: 4000
