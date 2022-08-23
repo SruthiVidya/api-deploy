@@ -73,5 +73,4 @@ spec:
   - protocol: TCP
     port: {{ .Values.port }}
     targetPort: {{ .Values.port }}
-  externalTrafficPolicy: local
   type: {{ .Values.type_svc }}
